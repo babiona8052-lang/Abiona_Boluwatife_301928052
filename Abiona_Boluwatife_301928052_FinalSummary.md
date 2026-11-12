@@ -4,12 +4,11 @@
 
 ## Case study
 
-My case study is Food Delivery App. I designed the database for customers placing food delivery orders, restaurant staff maintaining menus and accepting orders and analysts reviewing order activity, with separate tables named customer, restaurant, menu_item, delivery_order and order_item. It supports these operations: maintain customer, restaurant, and menu item records; place an order containing one or more menu items; review orders and summarize item sales.
+My case study is the Food Delivery App. The database is designed to support customers placing food delivery orders, restaurant staff maintaining their menus and accepting orders and analysts reviewing order activity. The relevant tables are customer, restaurant, menu_item, delivery_order and order_item. The operations it supports are: maintain customer, restaurant and menu item records; place an order (which can contain one or more menu items); review orders and summarise item sales.
 
 ## Portfolio 1: Database Design and Modelling
 
-I organised the relational design into 5 tables. Primary keys identify records, foreign keys preserve the links, and checks enforce the stated business rules. A menu item's price must be greater than zero. The normalisation examples show the sample data at 1NF, 2NF and 3NF. All 18 deliberately invalid inserts were rejected without changing the valid sample rows.
-
+The relational design comprises 5 tables. Primary keys are used to identify records, foreign keys ensure relationships between tables are maintained and checks ensure business rules are enforced. Prices cannot be less than 0 for a Menu Item. Normalisation examples demonstrate the sample data is in 1NF, 2NF & 3NF. All 18 invalid inserts were denied. Sample data was not altered.
 ![Food Delivery App ER diagram](images/Abiona_Boluwatife_301928052_ERDiagram.png)
 
 Figure 1. Tables, keys and relationships. PK: primary key; FK: foreign key; UK: unique value.
@@ -18,15 +17,16 @@ Figure 1. Tables, keys and relationships. PK: primary key; FK: foreign key; UK: 
 
 ## Portfolio 2: Query Processing and Optimisation
 
-I ran three SQL queries against the sample records. The join returned 1 rows and included Avery Chen with Cedar Kitchen. For the index comparison, I used 50,000 separate performance rows. The median lookup time changed from 2.357 ms to 0.301 ms. Both phases returned the same records. The measured plan used the new index. These timings apply to this lookup and environment.
+Three SQL queries were run on the sample data. One row was retrieved when joining the two tables, Avery Chen from Cedars Kitchen was joined. Fifty thousand individual performance rows were used for the index comparison. The median lookup time varied between 2.357ms and 0.301ms. The same information was found in both stages of the query. The plan used was using the new index. These times are specific to this lookup and environment.
 
 ## Portfolio 3: Transactions and Concurrency
 
-I used a temporary counter on delivery_order to test COMMIT, ROLLBACK and READ COMMITTED isolation. The uncommitted update remained hidden from the other session, and ROLLBACK restored the earlier committed value. Without locking, two increments left the counter at 2. With SELECT FOR UPDATE, Session B waited for Session A and the final value was 3. The helper is confined to this exercise; the case's original business fields stay unchanged.
+To test the behaviour of COMMIT, ROLLBACK and READ COMMITTED I used a temporary counter in delivery_order. Uncommitted updates are not visible to the other session. Using ROLLBACK restored the previously committed value. Without using any locks the value increased by 2. Using SELECT FOR UPDATE caused Session B to wait for Session A to complete and resulted in an increase of 3. The helper is limited to this scenario and the original business fields have not been changed.
 
 ## Portfolio 4: NoSQL and Advanced Data Models
 
-I used order_events for the case's event documents. MongoDB inserted 2 sample events and returned the expected results for 4 queries. Validation rejected an invalid date type and a duplicate event ID. Embedded snapshots keep related details with an event, while the details field can differ by event type. These are fictional events; PostgreSQL continues to enforce its relational rules.
+I used the order_events collection for the events in the case. The MongoDB inserts two sample events and the queries return as expected (there are 4). Validation failed on an invalid date type and duplicate event ID. Snapshots are embedded and therefore related data is kept with the event. The details field will vary depending on the event type. The events are made up and PostgreSQL still enforces its rules.
+
 
 ## Repository and evidence
 
@@ -39,11 +39,11 @@ The portfolio folders contain the SQL and JavaScript, explanations, query plans,
 
 ## Portfolio 5: Distributed and Cloud Database Exercise
 
-I proposed three MongoDB replica members across separate failure zones. The discussion covers primary elections, majority acknowledgement, secondary lag and sharding trade-offs for order_events. Replication supports availability, while backups address recovery. PostgreSQL needs its own availability plan. This is the permitted discussion option; no live replica set or failover test was deployed.
+3 replica members for MongoDB. Primary elections, majority acknowledge, secondary replication lag and order_events shard considerations. Replicated to provide availability. Backups provided to solve recovery. PostgreSQL had to have an availability solution. This is what was discussed. No deployment of a live replica set to test failover.
 
 ## Individual reflection
 
-I kept customer, restaurant, menu_item, delivery_order, order_item in separate tables so their details could be maintained without repeating them in every related record. A menu item's price must be greater than zero. The constraint tests check this alongside the required values and record links. One issue illustrated by the two-session exercise is that both sessions can read the same value before either update is committed. Locking the row before reading preserves both increments. The index comparison also shows why I need to check the execution plan as well as the final answer: the same result can require different amounts of database work.
+The data was stored in separate tables to avoid duplication. This included customer, restaurant, menu_item, delivery_order, and order_item. There were constraints in place to ensure that menu items had a positive price. The constraints were tested to ensure correct values and relationships between the records. The two session example demonstrated an issue with reading the same value in both sessions before any commits. To keep both increments, the row should be locked before reading. The index comparison demonstrates that it is important to check what the execution plan looks like as even if the same result is achieved there could be different levels of work required in the database.
 
 ## AI-use declaration
 
